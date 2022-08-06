@@ -21,6 +21,6 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'echo $(ARM_ACCESS_KEY)'
+    script: echo $(ARM_ACCESS_KEY)
   env:
     ARM_ACCESS_KEY: $(storage) 
