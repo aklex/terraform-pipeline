@@ -12,10 +12,9 @@ pool:
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
-
 - task: AzureKeyVault@2
   inputs:
-    azureSubscription: 'service-pipeline-conn'
+    azureSubscription: 'Azure subscription 1(405cb2f4-7be2-4f9b-a67e-b13fe340ee9d)'
     KeyVaultName: 'serviceapp-kv'
     SecretsFilter: 'storage'
     RunAsPreJob: true
