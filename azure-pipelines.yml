@@ -18,3 +18,9 @@ steps:
     KeyVaultName: 'serviceapp-kv'
     SecretsFilter: '*'
     RunAsPreJob: true
+  env:
+    ARM_ACCESS_KEY: $(storage) 
+
+- script: |
+    echo "Secret: $ARM_ACCESS_KEY"
+  displayName: 'Show secret'
