@@ -22,5 +22,5 @@ steps:
     ARM_ACCESS_KEY: $(storage) 
 
 - script: |
-    echo "Secret: $ARM_ACCESS_KEY"
+    echo Secret: $(ARM_ACCESS_KEY)
   displayName: 'Show secret'
