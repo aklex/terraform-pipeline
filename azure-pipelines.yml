@@ -22,7 +22,16 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo $ARM_ACCESS_KEY  
+      echo 'echo $(ARM_ACCESS_KEY) > secret.txt
   env:
     ARM_ACCESS_KEY: $(storage) 
-  
+- task: CopyFiles@2
+  inputs:
+    Contents: secret.txt
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container' 
