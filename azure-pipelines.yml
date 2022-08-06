@@ -98,6 +98,6 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              commandOptions: 'main.tfplan --auto-approve'
+              commandOptions: '--auto-approve main.tfplan'
               environmentServiceNameAzureRM: 'serv-conn'
 
