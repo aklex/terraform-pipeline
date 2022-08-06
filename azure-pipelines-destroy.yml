@@ -31,6 +31,12 @@ stages:
               backendAzureRmContainerName: '$(rem_container_name)'
               backendAzureRmKey: '$(rem_key)'
           - task: TerraformTaskV3@3
+            displayName: Plan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'serv-conn'
+          - task: TerraformTaskV3@3
             displayName: Destroy
             inputs:
               provider: 'azurerm'
