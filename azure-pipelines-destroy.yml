@@ -37,15 +37,10 @@ stages:
               command: 'plan'
               commandOptions: '-destroy'
               environmentServiceNameAzureRM: 'serv-conn'
-          - task: ManualValidation@0
-            timeoutInMinutes: 20
-            inputs:
-              notifyUsers: 'aleksey.kabanov@gmail.com'
-              instructions: 'Review changes and destroy'
           - task: TerraformTaskV3@3
             displayName: Destroy
             inputs:
               provider: 'azurerm'
               command: 'destroy'
-              commandOptions: '--auto-approve'
+#              commandOptions: '--auto-approve'
               environmentServiceNameAzureRM: 'serv-conn'
