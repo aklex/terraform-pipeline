@@ -17,5 +17,5 @@ steps:
   inputs:
     azureSubscription: 'service-pipeline-conn'
     KeyVaultName: 'serviceapp-kv'
-    SecretsFilter: 'serviceapp-kv'
+    SecretsFilter: 'storage'
     RunAsPreJob: true
