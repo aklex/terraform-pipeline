@@ -35,6 +35,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'plan'
+              commandOptions: '-destroy'
               environmentServiceNameAzureRM: 'serv-conn'
           - task: TerraformTaskV3@3
             displayName: Destroy
