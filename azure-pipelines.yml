@@ -39,8 +39,8 @@ stages:
               command: 'validate'
   - stage: TFplan
     displayName: TF plan
-    condition: succeeded('tfvalidate')
-    dependsOn: tfvalidate
+    condition: succeeded('TFvalidate')
+    dependsOn: TFvalidate
     jobs:
       - job: plan
         steps:
@@ -61,8 +61,10 @@ stages:
               command: 'plan'
               commandOptions: '-out main.tfplan'
               environmentServiceNameAzureRM: 'serv-conn'
-  - stage: Approve
+  - stage: TFApprove
     displayName: Manual approve
+    condition: succeeded('TFplan')
+    dependsOn: TFplan
     jobs:
       - job: approve
         displayName: Wait for approval
@@ -74,8 +76,8 @@ stages:
               instructions: 'Review changes and apply'
   - stage: TFapply
     displayName: TF apply
-    condition: succeeded('tfplan')
-    dependsOn: tfplan
+    condition: succeeded('TFApprove')
+    dependsOn: TFApprove
     jobs:
       - job: apply
         steps:
