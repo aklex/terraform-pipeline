@@ -25,7 +25,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo $(ARM_ACCESS_KEY)
-      
-      echo $(ARM_222)
+      echo $ARM_ACCESS_KEY      
+      echo $ARM_222
   
