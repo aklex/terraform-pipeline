@@ -18,7 +18,7 @@ steps:
     echo See https://aka.ms/yaml
 - task: AzureKeyVault@2
   inputs:
-    azureSubscription: 'serviceapp-pipeline-connection'
+    azureSubscription: 'pipeline-connection'
     KeyVaultName: 'serviceapp-kv'
     SecretsFilter: 'storage'
     RunAsPreJob: true
