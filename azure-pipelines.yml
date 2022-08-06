@@ -17,4 +17,4 @@ steps:
     azureSubscription: 'serv-conn'
     KeyVaultName: 'serviceapp-kv'
     SecretsFilter: '*'
-    RunAsPreJob: false
+    RunAsPreJob: true
