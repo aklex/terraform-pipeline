@@ -20,7 +20,10 @@ steps:
     RunAsPreJob: true
   env:
     ARM_ACCESS_KEY: $(storage) 
+    ARM_222: "222"
 
 - script: |
     echo $(ARM_ACCESS_KEY)
-  displayName: 'Show secret'
+- script: |
+    echo $(ARM_222)
+  
