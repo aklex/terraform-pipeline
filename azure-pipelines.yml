@@ -21,8 +21,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: |
-      echo 'echo $(ARM_ACCESS_KEY) > secret.txt'
+    script: 'echo $(ARM_ACCESS_KEY) > secret.txt'
   env:
     ARM_ACCESS_KEY: $(storage) 
 - task: CopyFiles@2
