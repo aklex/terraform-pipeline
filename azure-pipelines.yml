@@ -25,5 +25,5 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo $(storage)      
+      echo $ARM_ACCESS_KEY    
   
