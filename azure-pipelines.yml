@@ -10,13 +10,14 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  rg_name: 'tfstate'
+  rg_name: 'serviceapp-rg'
   rem_storage_account_name: 'tfstate1048584424'
   rem_container_name: 'tfstate'
   rem_key: 'terraform.tfstate'
 
 stages:
-  - stage: tfvalidate
+  - stage: TFvalidate
+    displayName: TF validate
     jobs: 
       - job: validate
         continueOnError: false
@@ -36,7 +37,8 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'validate'
-  - stage: tfplan
+  - stage: TFplan
+    displayName: TF plan
     condition: succeeded('tfvalidate')
     dependsOn: tfvalidate
     jobs:
@@ -59,7 +61,19 @@ stages:
               command: 'plan'
               commandOptions: '-out main.tfplan'
               environmentServiceNameAzureRM: 'serv-conn'
-  - stage: tfapply
+  - stage: Approve
+    displayName: Manual approve
+    jobs:
+      - job: approve
+        displayName: Wait for approval
+        steps:
+          - task: ManualValidation@0
+            timeoutInMinutes: 120
+            inputs:
+              notifyUsers: 'aleksey.kabanov@gmail.com'
+              instructions: 'Review changes and apply'
+  - stage: TFapply
+    displayName: TF apply
     condition: succeeded('tfplan')
     dependsOn: tfplan
     jobs:
@@ -81,6 +95,6 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              commandOptions: 'main.tfplan'
+              commandOptions: 'main.tfplan -auto-approve'
               environmentServiceNameAzureRM: 'serv-conn'
 
