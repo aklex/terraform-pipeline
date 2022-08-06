@@ -9,34 +9,78 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-- task: AzureKeyVault@2
-  inputs:
-    azureSubscription: 'serv-conn'
-    KeyVaultName: 'serviceapp-kv'
-    SecretsFilter: '*'
-    RunAsPreJob: true
+variables:
+  rg_name: 'tfstate'
+  rem_storage_account_name: 'tfstate1048584424'
+  rem_container_name: 'tfstate'
+  rem_key: 'terraform.tfstate'
 
-- task: CmdLine@2
-  inputs:
-    script: "echo Key: $ARM_AK2"
-  env:
-    ARM_AK2: "787878" 
-- task: CmdLine@2
-  inputs:
-    script: "echo $ARM_ACCESS_KEY > secret.txt"
-  env:
-    ARM_ACCESS_KEY: $(storage) 
+stages:
+  - stage: tfvalidate
+    jobs: 
+      - job: validate
+        continueOnError: false
+        steps:
+          - task: TerraformTaskV3@3
+            displayName: Init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'serv-conn'
+              backendAzureRmResourceGroupName: '$(rg_name)'
+              backendAzureRmStorageAccountName: '$(rem_storage_account_name)'
+              backendAzureRmContainerName: '$(rem_container_name)'
+              backendAzureRmKey: '$(rem_key)'
+          - task: TerraformTaskV3@3
+            displayName: Validate
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+  - stage: tfplan
+    condition: succeeded('tfvalidate')
+    dependsOn: tfvalidate
+    jobs:
+      - job: plan
+        steps:
+          - task: TerraformTaskV3@3
+            displayName: Init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'serv-conn'
+              backendAzureRmResourceGroupName: '$(rg_name)'
+              backendAzureRmStorageAccountName: '$(rem_storage_account_name)'
+              backendAzureRmContainerName: '$(rem_container_name)'
+              backendAzureRmKey: '$(rem_key)'
+          - task: TerraformTaskV3@3
+            displayName: Plan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              commandOptions: '-out main.tfplan'
+              environmentServiceNameAzureRM: 'serv-conn'
+  - stage: tfapply
+    condition: succeeded('tfplan')
+    dependsOn: tfplan
+    jobs:
+      - job: apply
+        steps:
+          - task: TerraformTaskV3@3
+            displayName: Init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'serv-conn'
+              backendAzureRmResourceGroupName: '$(rg_name)'
+              backendAzureRmStorageAccountName: '$(rem_storage_account_name)'
+              backendAzureRmContainerName: '$(rem_container_name)'
+              backendAzureRmKey: '$(rem_key)'
+              
+          - task: TerraformTaskV3@3
+            displayName: Apply
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              commandOptions: 'main.tfplan'
+              environmentServiceNameAzureRM: 'serv-conn'
 
-- task: CopyFiles@2
-  inputs:
-    Contents: secret.txt
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
