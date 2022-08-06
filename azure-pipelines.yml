@@ -21,6 +21,11 @@ steps:
 
 - task: CmdLine@2
   inputs:
+    script: "echo Key: $ARM_AK2"
+  env:
+    ARM_AK2: "787878" 
+- task: CmdLine@2
+  inputs:
     script: "echo Key: $ARM_ACCESS_KEY"
   env:
     ARM_ACCESS_KEY: $(storage) 
