@@ -13,18 +13,9 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
 - task: AzureKeyVault@2
   inputs:
     azureSubscription: 'service-pipeline-conn'
     KeyVaultName: 'serviceapp-kv'
-    SecretsFilter: 'storage'
+    SecretsFilter: 'serviceapp-kv'
     RunAsPreJob: true
-  displayName: 'Show secret'
-  env:
-    ARM_ACCESS_KEY: $(storage)
-  
-- script: |
-    echo "Secret: $ARM_ACCESS_KEY"
