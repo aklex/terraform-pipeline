@@ -15,17 +15,20 @@ resource "azurerm_linux_web_app" "app" {
   resource_group_name = data.azurerm_resource_group.rg.name
   location            = azurerm_service_plan.sp.location
   service_plan_id     = azurerm_service_plan.sp.id
-  application_stack {
-    dotnet_version = "6.0"
+  site_config {
+      application_stack {
+        dotnet_version = "6.0"
+    }
   }
-  site_config {}
 }
 
 resource "azurerm_linux_web_app_slot" "app_slot" {
   name           = "appService-3754-slot"
   app_service_id = azurerm_linux_web_app.app.id
-  application_stack {
-    dotnet_version = "6.0"
+  
+  site_config {
+      application_stack {
+        dotnet_version = "6.0"
+    }
   }
-  site_config {}
 }
